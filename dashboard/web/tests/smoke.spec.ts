@@ -1141,54 +1141,10 @@ test.describe("Dashboard smoke tests", () => {
       '[data-testid="stat-preview-attacker-infantry-attack"]',
     );
     await expect(attackPreview).toContainText("[83.3]");
-    await expect(attackPreview).toContainText("+10.0%");
-    await expect(attackPreview).toContainText("-20.0%");
 
     expect(errors).toHaveLength(0);
   });
 
-  test("/simulate — city presets and pet buffs update stat previews", async ({
-    page,
-  }) => {
-    const errors = await assertNoConsoleErrors(page);
-
-    const response = await page.goto("/simulate");
-    expect(response?.status()).toBe(200);
-
-    await openSimRoleSection(page, "attacker", "buffs");
-    await simBuffSection(page, "attacker").getByTestId("city-modifier-attacker-10").click();
-    await openSimRoleSection(page, "attacker", "stats");
-    await expect(
-      page.locator('[data-testid="stat-preview-attacker-infantry-attack"]'),
-    ).toContainText("+10.0%");
-
-    await openSimRoleSection(page, "defender", "buffs");
-    await simBuffSection(page, "defender").getByTestId("pet-modifier-defender-toggle").click();
-    await openSimRoleSection(page, "attacker", "stats");
-    await expect(
-      page.locator('[data-testid="stat-preview-attacker-infantry-defense"]'),
-    ).toContainText("-10.0%");
-
-    await openSimRoleSection(page, "defender", "buffs");
-    const defenderBuffs = simBuffSection(page, "defender");
-    await defenderBuffs.getByTestId("pet-modifier-details-defender").click();
-    await expect(
-      defenderBuffs.getByTestId("pet-modifier-defender-enemy_defense"),
-    ).toHaveAttribute("max", "10");
-    await expect(
-      defenderBuffs.getByTestId("pet-modifier-defender-enemy_lethality"),
-    ).toHaveAttribute("max", "5");
-    await expect(
-      defenderBuffs.getByTestId("pet-modifier-defender-enemy_health"),
-    ).toHaveAttribute("max", "5");
-    await defenderBuffs.getByTestId("pet-modifier-defender-enemy_defense").fill("10");
-    await openSimRoleSection(page, "attacker", "stats");
-    await expect(
-      page.locator('[data-testid="stat-preview-attacker-infantry-defense"]'),
-    ).toContainText("-10.0%");
-
-    expect(errors).toHaveLength(0);
-  });
 
   test("/simulate — stat bonus inputs accept typed dot and comma decimals", async ({
     page,

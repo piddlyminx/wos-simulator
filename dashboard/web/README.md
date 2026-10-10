@@ -190,6 +190,17 @@ when rerunning and displays the reference and warnings; it does not decode the
 game protocol. The game's internal seed stays in the artifact, not the report
 header or simulator RNG. Predictions store their own simulator seed.
 
+Imports salvage usable fields independently and list every omission both above
+the setup and beside the results. Missing or unusable combat stats use neutral
+0% bonuses, with field-specific warnings; these defaults are not game observations.
+If each side has at least one usable supported troop, the private watcher
+simulates immediately, saves a normal completed run, and replies with its URL.
+Only an army with no usable troops prevents report import. Warnings never block
+simulation, and there are no drafts, acknowledgements, or review workflow.
+Players can edit any incorrectly imported/defaulted values and rerun normally.
+The original source artifact and all import warnings survive simulation,
+optimisation and ratio exploration. Omitted/defaulted data can affect predictions.
+
 Both simulator presentations keep three fixed primary troop rows: infantry,
 lancer and marksman. The standard dashboard keeps each hero and its skills with
 the matching primary troop row. Primary rows cannot be removed or change unit.

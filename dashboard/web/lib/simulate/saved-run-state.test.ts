@@ -46,6 +46,45 @@ test("savedRunToFormState hydrates simulate runs and clamps replicates", () => {
   assert.equal(state.savedRunMeta?.title.includes("vs"), true);
 });
 
+test("warned report runs restore predictions and neutral stats without changing source evidence", () => {
+  const request = baseRequest();
+  request.attacker.stats.inf = [450, 0, 0, 720];
+  request.defender.stats = {
+    inf: [0, 0, 0, 0],
+    lanc: [0, 0, 0, 0],
+    mark: [0, 0, 0, 0],
+  };
+  request.attacker.heroes.infantry = { name: "Jeronimo", skills: [3, 0, 2, 0] };
+  request.attacker.troop_composition = { infantry_t6: 240, infantry_t6_fc5: 360 };
+  request.attacker.troop_types.infantry = "infantry_t6";
+  request.attacker.troops = { infantry: 600, lancer: 0, marksman: 0 };
+  request.source_report = {
+    reference: "partial-report",
+    report: { untouched: ["unknown-skill", 123] },
+    raw_report_base64: "AAEC/w==",
+    warnings: ["Attacker infantry defense is missing; using neutral 0% bonus."],
+  };
+  const saved = savedRun("simulate", request);
+  const snapshot = JSON.stringify(saved);
+
+  const state = savedRunToFormState(saved);
+
+  assert.equal(state.result?.summary.attacker_win_rate, 0.5);
+  assert.equal(state.result?.saved_run_id, saved.id);
+  assert.deepEqual(state.attacker.heroes.infantry, request.attacker.heroes.infantry);
+  assert.deepEqual(state.attacker.troopRows?.map(({ tier, count }) => [tier, count]), [
+    ["t6", 240], ["t6_fc5", 360], ["t11_fc10", 0], ["t11_fc10", 0],
+  ]);
+  assert.deepEqual(state.attacker.stats.infantry, {
+    attack: 450, defense: 0, lethality: 0, health: 720,
+  });
+  for (const stats of Object.values(state.defender.stats)) {
+    assert.deepEqual(stats, { attack: 0, defense: 0, lethality: 0, health: 0 });
+  }
+  state.attacker.stats.infantry.defense = 123;
+  assert.equal(JSON.stringify(saved), snapshot);
+});
+
 test("savedRunToFormState hydrates optimize settings from a single parser", () => {
   const base = baseRequest();
   const saved = savedRun("optimize_ratio", {

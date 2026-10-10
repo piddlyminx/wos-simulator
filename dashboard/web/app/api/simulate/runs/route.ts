@@ -75,7 +75,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "request is required" }, { status: 400 });
     }
     if (!body.result || typeof body.result !== "object") {
-      return NextResponse.json({ error: "result is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "result is required" },
+        { status: 400 },
+      );
     }
     const currentOwnerToken = readSavedRunOwnerToken(req);
     const ownerToken = currentOwnerToken ?? createSavedRunOwnerToken();

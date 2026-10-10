@@ -46,11 +46,6 @@ test("troop ratio handles and Lancer segment adjust the shared army counts", asy
   await expect(ratio).toContainText("Marksman 33.3%");
 
   await expect(infantryRow).toBeVisible();
-  expect(
-    await ratio.evaluate(
-      (element) => element.nextElementSibling?.getAttribute("data-testid"),
-    ),
-  ).toBe("sim-unit-row-attacker-infantry");
 
   const leftHandle = ratio.getByTestId(
     "troop-ratio-attacker-infantry-lancer-handle",

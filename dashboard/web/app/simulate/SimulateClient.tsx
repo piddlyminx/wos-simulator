@@ -483,7 +483,7 @@ export default function SimulateClient({
   );
   const [rallyMode, setRallyMode] = useState(() => initialState.rallyMode);
   const [mobileTab, setMobileTab] = useState<SimWorkspaceTab>(() =>
-    initialState.result || initialState.optimizeResult || initialState.surfaceResult ? "results" : "attacker",
+    initialState.savedRunMeta ? "results" : "attacker",
   );
   const [syncStatsOnHeroChange, setSyncStatsOnHeroChange] = useState(true);
   const wideSimLayout = useWideSimLayout();
@@ -800,13 +800,14 @@ export default function SimulateClient({
 
   useEffect(() => {
     if (initialResultsScrollDoneRef.current) return;
-    if (!initialState.result && !initialState.optimizeResult && !initialState.surfaceResult) {
+    if (!initialState.savedRunMeta) {
       return;
     }
     initialResultsScrollDoneRef.current = true;
     scrollResultsIntoViewOnDesktop();
   }, [
     initialState.optimizeResult,
+    initialState.savedRunMeta,
     initialState.result,
     initialState.surfaceResult,
     scrollResultsIntoViewOnDesktop,
@@ -999,7 +1000,6 @@ export default function SimulateClient({
   }
 
   function applyUpload(submission: UploadReportSubmission) {
-    setSourceReport(undefined);
     const {
       ocr,
       heroes,
@@ -1130,6 +1130,7 @@ export default function SimulateClient({
         attacker: basePayload.attacker,
         defender: basePayload.defender,
         rally_mode: basePayload.rally_mode,
+        ...(sourceReport ? { source_report: sourceReport } : {}),
       };
       const payload = {
         ...optimizeBase,
@@ -1201,6 +1202,7 @@ export default function SimulateClient({
       replicates: surfaceReplicates,
       rallyMode,
       jobs: surfaceJobs,
+      ...(sourceReport ? { source_report: sourceReport } : {}),
     } satisfies SurfaceSweepPayload;
     const job = runWorkerProgressiveSurfaceSweep(
       payload,
@@ -1716,11 +1718,11 @@ export default function SimulateClient({
       {sourceReport && (
         <div className="sim-tool-panel mb-4 px-3 py-2 text-xs" data-testid="shared-report-banner">
           <strong>Imported game report {sourceReport.reference}</strong>
-          <p>The saved result is a simulator prediction, not the game outcome.</p>
-          <p>Reported equipment, hero levels and other stat bonuses are included in the effective stats; simulated pre-battle bonuses have been removed from the editable base stats to avoid double counting.</p>
+          <p>Results are simulator predictions, not the game outcome.</p>
+          <p>Usable report fields are included. Missing or unusable combat stats use neutral 0% bonuses; omitted fields and defaults can affect the prediction.</p>
           {sourceReport.warnings.length > 0 && (
             <ul className="list-disc list-inside mt-1" style={{ color: "var(--sim-yellow)" }}>
-              {sourceReport.warnings.map(warning => <li key={warning}>{warning}</li>)}
+              {sourceReport.warnings.map((warning, index) => <li key={index}>{warning}</li>)}
             </ul>
           )}
         </div>
@@ -1960,7 +1962,7 @@ export default function SimulateClient({
 
       <div
         ref={resultsAnchorRef}
-        className={`${presentation === "deploy" && !result && !optimizeResult && !surfaceResult
+        className={`${presentation === "deploy" && !result && !optimizeResult && !surfaceResult && !sourceReport
           ? "hidden"
           : wideSimLayout || mobileTab === "results"
             ? "block"
@@ -1969,6 +1971,20 @@ export default function SimulateClient({
         data-testid="sim-panel-results"
         data-tour="results-panel"
       >
+        {sourceReport && sourceReport.warnings.length > 0 && (
+          <div
+            role="note"
+            className="sim-tool-panel mb-4 p-3 text-sm"
+            style={{ color: "var(--sim-yellow)", borderColor: "var(--sim-yellow)" }}
+            data-testid="import-prediction-warnings"
+          >
+            <strong>Report import warnings — {sourceReport.reference}</strong>
+            <p>This prediction uses usable imported data and any manual edits. Omitted fields and neutral 0% defaults for missing or unusable combat stats can affect the prediction.</p>
+            <ul className="list-disc list-inside mt-1">
+              {sourceReport.warnings.map((warning, index) => <li key={index}>{warning}</li>)}
+            </ul>
+          </div>
+        )}
         {!result && !optimizeResult && !surfaceResult ? (
           <div className="sim-tool-panel sim-results-placeholder mb-4 p-3 text-xs" style={{ color: "var(--sim-muted)" }}>
             Results will appear here after running a simulation, optimisation, or ratio exploration.

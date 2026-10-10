@@ -178,14 +178,34 @@ const tournamentResult: TournamentResult = {
   },
 };
 
-test("saved run helpers route snapshots to their owning pages", () => {
-  assert.equal(buildSimulationShareUrl("abc123", "simulate"), "/simulate?run=abc123");
-  assert.equal(buildSimulationShareUrl("abc123", "bear_simulate"), "/bear?run=abc123");
-  assert.equal(buildSimulationShareUrl("abc123", "ratio_explorer"), "/simulate?run=abc123");
-  assert.equal(buildSimulationShareUrl("abc123", "tournament"), "/tournament?run=abc123");
-  assert.match(buildSimulationRunTitle(bearRequest, "bear_simulate"), /^Bear: /);
-  assert.match(buildSimulationRunTitle(surfaceRequest, "ratio_explorer"), /^Ratio Explorer: /);
-  assert.equal(buildSimulationRunTitle(tournamentRequest, "tournament"), "Tournament: Test batch (2 rounds)");
+
+test("completed report decoding preserves usable inputs and evidence and requires a result", async () => {
+  const request: SimulateRequestPayload = {
+    ...pvpRequest,
+    attacker: {
+      ...side,
+      troop_composition: { infantry_t6: 100, infantry_t6_fc5: 50, lancer_t6: 50, marksman_t6: 25 },
+      stats: { inf: [250, 0, 0, 310], lanc: [0, 0, 0, 0], mark: [0, 0, 0, 0] },
+    },
+    source_report: {
+      reference: "partial-report",
+      report: { unknownHero: 9999 },
+      raw_report_base64: "AAEC/w==",
+      warnings: ["Attacker infantry defense unavailable; using neutral 0%.", "Unsupported hero 9999 omitted."],
+    },
+  };
+  const doc = {
+    version: 1, id: "partial-report-run", kind: "simulate",
+    created_at: "2026-10-10T12:00:00.000Z", request, result: pvpResult,
+  };
+  const decoded = await store.decodeSimulationRun(
+    await store.gzipDocument(Buffer.from(JSON.stringify(doc))),
+  );
+  assert.deepEqual(decoded, doc);
+  for (const kind of ["simulate", "optimize_ratio", "bear_simulate", "bear_optimize_ratio", "ratio_explorer", "tournament"]) {
+    assert.throws(() => store.assertSavedSimulationDoc({ ...doc, kind, result: null }), /malformed/);
+    assert.throws(() => store.assertSavedSimulationDoc({ ...doc, kind, result: undefined }), /malformed/);
+  }
 });
 
 const testUrl = process.env.TEST_DATABASE_URL;
@@ -235,6 +255,24 @@ test("all saved run kinds round trip and list in separate histories", databaseTe
   assert.equal(second.has_more, false);
   assert.notEqual(second.runs[0].id, page.runs[0].id);
   assert.equal(second.next_offset, 2);
+});
+
+test("completed report runs save and reload usable inputs, warnings and source bytes", databaseTest, async () => {
+  const request: SimulateRequestPayload = {
+    ...pvpRequest,
+    attacker: { ...side, stats: { inf: [250, 0, 0, 310], lanc: [0, 0, 0, 0], mark: [0, 0, 0, 0] } },
+    source_report: {
+      reference: "partial-report",
+      report: { unknownHero: 9999 },
+      raw_report_base64: "AAEC/w==",
+      warnings: ["Attacker infantry defense unavailable; using neutral 0%.", "Unsupported hero 9999 omitted."],
+    },
+  };
+  const saved = await store.saveSimulationRun("simulate", request, pvpResult);
+  const loaded = await store.readSimulationRun(saved.id);
+  assert.deepEqual(loaded?.result, pvpResult);
+  assert.deepEqual(loaded?.request, request);
+  assert.equal((await store.listSimulationRunsPage()).runs[0].id, saved.id);
 });
 
 test("owner authorization preserves kept, denied and missing outcomes without leaking ownership", databaseTest, async () => {

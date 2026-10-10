@@ -1,7 +1,7 @@
 import { loadSimulatorConfig } from "@simulator/config-default";
 import { prepareBattle, runPrepared } from "@simulator/simulator";
 import type { FighterInput, SimulatorConfig } from "@simulator/types";
-import type { SimulateSidePayload } from "@/lib/simulate-run";
+import type { SimulateSidePayload, SimulationReportSource } from "@/lib/simulate-run";
 import { toBattleInput } from "./adapters";
 
 export interface SurfaceSweepPayload {
@@ -18,6 +18,7 @@ export interface SurfaceSweepPayload {
   /** Rally mode — if true, uses rally engagement type (asymmetric skills) */
   rallyMode: boolean;
   jobs: number;
+  source_report?: SimulationReportSource;
 }
 
 export interface SurfacePoint {
