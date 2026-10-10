@@ -34,5 +34,13 @@ export function loadSimulatorConfigFromDir(configDir: string): SimulatorConfig {
 }
 
 function readJson(path: string): unknown {
-  return JSON.parse(readFileSync(path, "utf8"));
+  const content = readFileSync(path, "utf8");
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      throw new SyntaxError(`${relative(process.cwd(), path)}: ${error.message}`, { cause: error });
+    }
+    throw error;
+  }
 }
