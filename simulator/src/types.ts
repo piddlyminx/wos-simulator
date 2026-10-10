@@ -213,6 +213,8 @@ export interface SimulationOptions {
   mode?: SimulationMode;
   /** Standard-mode effect sources and kinds for battle detail views, without equation traces. */
   detailedEffects?: boolean;
+  /** Per-run random stream in [0, 1); caller owns its state. Omitted uses the seeded engine RNG. */
+  rng?: () => number;
   // Whether a dodged / no_attack'd attack still charges (uses += 1) the attacker's
   // attack-constrained effects, as the game does. Default true.
   useEffectsOnDodge?: boolean;
