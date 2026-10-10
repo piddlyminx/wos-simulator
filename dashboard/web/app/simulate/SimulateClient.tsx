@@ -54,6 +54,7 @@ import {
 import {
   buildSimulationRunTitle,
   isPvpSavedSimulationKind,
+  isPendingReportSimulation,
   PVP_SAVED_RUN_KINDS,
   type SavedSimulationRunListItem,
   OptimizeRatioApiResponse,
@@ -87,6 +88,7 @@ import {
   type SavedRunMeta,
 } from "@/lib/simulate/saved-run-state";
 import { recommendedBrowserWorkerCount } from "@/lib/simulator/worker-count";
+import { normalizeReportImport } from "@/lib/simulator/report-import";
 import {
   attackerSurfaceValues,
   defenderSurfaceValues,
@@ -107,6 +109,7 @@ import {
   optimizeRowKey,
   representativeSimulationSeed,
   sideWithPresetStats,
+  sideFromPayload,
   signedSurvivors,
   toApiPayload,
   type Side,
@@ -621,7 +624,12 @@ export default function SimulateClient({
     setScope: setRecentRunsScope,
   } = recentRuns;
   const loadedRunIdRef = useRef<string | null>(initialSavedRun?.id ?? null);
-  const [activeRunId, setActiveRunId] = useState<string | null>(initialRunId);
+  const [pendingSavedRun, setPendingSavedRun] = useState<SavedSimulationRunResponse | null>(
+    () => initialSavedRun && isPendingReportSimulation(initialSavedRun) ? initialSavedRun : null,
+  );
+  const reportImportCancelRef = useRef<(() => void) | null>(null);
+  const attemptedReportImportsRef = useRef(new Set<string>());
+  const [activeRunId, setActiveRunId] = useState<string | null>(initialRunId ?? initialSavedRun?.id ?? null);
   const previousRunIdRef = useRef<string | null>(initialRunId);
   // When true, the defender panel is rendered on the left. Shared with the
   // upload modal so both views always display sides in the same order.
@@ -732,6 +740,7 @@ export default function SimulateClient({
 
   const applySavedRun = useCallback((saved: SavedSimulationRunResponse) => {
     const savedState = savedRunToFormState(saved);
+    setPendingSavedRun(isPendingReportSimulation(saved) ? saved : null);
     setAttacker(savedState.attacker);
     setDefender(savedState.defender);
     resetLoadedPresets(savedState.loadedPresetNames);
@@ -797,6 +806,99 @@ export default function SimulateClient({
     setRunOptionsOpen,
     storeSavedRunMeta,
   ]);
+
+  // Layout changes must not restart an in-flight import. Keep the presentation
+  // callbacks current without making them dependencies of the worker lifetime.
+  const reportImportCallbacksRef = useRef({ applySavedRun, scrollResultsIntoViewOnDesktop });
+  reportImportCallbacksRef.current = { applySavedRun, scrollResultsIntoViewOnDesktop };
+
+  useEffect(() => {
+    if (!pendingSavedRun || !isPendingReportSimulation(pendingSavedRun)) return;
+    if (activeRunId !== pendingSavedRun.id) return;
+    const saved = pendingSavedRun;
+    let cancelled = false;
+    let finished = false;
+    let cancelWorker: (() => void) | null = null;
+    const controller = new AbortController();
+    const cancel = () => {
+      cancelled = true;
+      cancelWorker?.();
+      controller.abort();
+    };
+    reportImportCancelRef.current = cancel;
+
+    // React StrictMode replays effects before this microtask. The discarded
+    // effect therefore never creates a worker or consumes the import attempt.
+    queueMicrotask(() => {
+      if (cancelled) return;
+      void (async () => {
+        try {
+          const payload = normalizeReportImport(saved.request);
+          if (cancelled) return;
+          setAttacker(sideFromPayload(payload.attacker));
+          setDefender(sideFromPayload(payload.defender));
+          resetLoadedPresets({
+            attacker: payload.attacker.stat_profile_name ?? null,
+            defender: payload.defender.stat_profile_name ?? null,
+          });
+          setSourceReport(payload.source_report);
+          setReplicates(payload.replicates);
+          setRallyMode(payload.rally_mode);
+          if (attemptedReportImportsRef.current.has(saved.id)) {
+            finished = true;
+            setError("Automatic report prediction already ran in this page. Run simulation to compute again.");
+            return;
+          }
+          attemptedReportImportsRef.current.add(saved.id);
+          setLoading(true);
+          setError(null);
+          setSavedRunError(null);
+          setSimulateProgress({ done: 0, total: payload.replicates });
+          const job = runWorkerSimulation(payload, (done, total) => {
+            if (!cancelled) setSimulateProgress({ done, total });
+          });
+          cancelWorker = job.cancel;
+          const computed = await job.promise;
+          if (cancelled) return;
+          setResult(computed);
+          setMobileTab("results");
+          reportImportCallbacksRef.current.scrollResultsIntoViewOnDesktop();
+          const response = await fetch(
+            `/api/simulate/runs/${encodeURIComponent(saved.id)}/complete`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ request: payload, result: computed }),
+              signal: controller.signal,
+            },
+          );
+          const completed = await readJsonOrThrow<SavedSimulationRunResponse>(response, "Report prediction save");
+          if (cancelled) return;
+          finished = true;
+          reportImportCallbacksRef.current.applySavedRun(completed);
+        } catch (err) {
+          if (!cancelled) {
+            finished = true;
+            setError(err instanceof Error ? err.message : String(err));
+          }
+        } finally {
+          if (!cancelled) {
+            setLoading(false);
+            setSimulateProgress(null);
+          }
+        }
+      })();
+    });
+    return () => {
+      cancel();
+      if (!finished) attemptedReportImportsRef.current.delete(saved.id);
+      if (reportImportCancelRef.current === cancel) {
+        reportImportCancelRef.current = null;
+        setLoading(false);
+        setSimulateProgress(null);
+      }
+    };
+  }, [activeRunId, pendingSavedRun, resetLoadedPresets, setSavedRunError]);
 
   useEffect(() => {
     if (initialResultsScrollDoneRef.current) return;
@@ -875,6 +977,7 @@ export default function SimulateClient({
         return;
       }
       const plainState = buildInitialSavedRunState(null, null);
+      setPendingSavedRun(null);
       setAttacker(plainState.attacker);
       setDefender(plainState.defender);
       setReplicates(plainState.replicates);
@@ -1044,6 +1147,9 @@ export default function SimulateClient({
   }
 
   async function runSimulation() {
+    reportImportCancelRef.current?.();
+    reportImportCancelRef.current = null;
+    setPendingSavedRun(null);
     setRunMode("simulate");
     setRunOptionsOpen(false);
     setLoading(true);
@@ -1581,6 +1687,9 @@ export default function SimulateClient({
   ]);
 
   function runSelectedMode() {
+    reportImportCancelRef.current?.();
+    reportImportCancelRef.current = null;
+    setPendingSavedRun(null);
     if (runMode === "simulate") void runSimulation();
     else if (runMode === "optimise") void runOptimizeRatio();
     else void runSurfaceExplore();
@@ -1719,9 +1828,13 @@ export default function SimulateClient({
         <div className="sim-tool-panel mb-4 px-3 py-2 text-xs" data-testid="shared-report-banner">
           <strong>Imported game report {sourceReport.reference}</strong>
           <p>Results are simulator predictions, not the game outcome.</p>
-          <p>Usable report fields are included. Missing or unusable combat stats use neutral 0% bonuses; omitted fields and defaults can affect the prediction.</p>
+          {pendingSavedRun && loading && (
+            <p role="status" aria-live="polite" data-testid="report-import-progress">
+              Computing report prediction… {simulateProgress?.done ?? 0} / {simulateProgress?.total ?? replicates} battles
+            </p>
+          )}
           {sourceReport.warnings.length > 0 && (
-            <ul className="list-disc list-inside mt-1" style={{ color: "var(--sim-yellow)" }}>
+            <ul data-testid="source-report-warnings" className="list-disc list-inside mt-1" style={{ color: "var(--sim-yellow)" }}>
               {sourceReport.warnings.map((warning, index) => <li key={index}>{warning}</li>)}
             </ul>
           )}

@@ -87,6 +87,76 @@ export interface SimulationReportSource {
   warnings: string[];
 }
 
+export interface ReportImportFighter {
+  name?: string;
+  heroes?: Record<string, Record<string, number>>;
+  troops?: Record<string, number>;
+  stats?: Partial<Record<
+    "infantry" | "lancer" | "marksman",
+    Partial<Record<"attack" | "defense" | "lethality" | "health", number>>
+  >>;
+  joiner_heroes?: Array<{ name: string; levels: Record<string, number> }> | Record<string, never>;
+}
+
+export interface ReportImportRequest {
+  report_import: { attacker: ReportImportFighter; defender: ReportImportFighter };
+  replicates: number;
+  rally_mode: boolean;
+  source_report: SimulationReportSource;
+}
+
+export const DEFAULT_REPORT_REPLICATES = 1000;
+
+function isNumberRecord(value: unknown): value is Record<string, number> {
+  return value !== null && typeof value === "object" && !Array.isArray(value) &&
+    Object.values(value).every((entry) => typeof entry === "number" && Number.isFinite(entry));
+}
+
+function isReportImportFighter(value: unknown): value is ReportImportFighter {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const fighter = value as Partial<ReportImportFighter>;
+  if (fighter.name !== undefined && typeof fighter.name !== "string") return false;
+  if (!isNumberRecord(fighter.troops) || !Object.values(fighter.troops).some((count) => count >= 1)) return false;
+  if (!Object.values(fighter.troops).every((count) => Number.isSafeInteger(count) && count >= 0)) return false;
+  if (fighter.heroes !== undefined && (
+    !fighter.heroes || typeof fighter.heroes !== "object" || Array.isArray(fighter.heroes) ||
+    !Object.values(fighter.heroes).every(isNumberRecord)
+  )) return false;
+  if (fighter.stats !== undefined) {
+    if (!fighter.stats || typeof fighter.stats !== "object" || Array.isArray(fighter.stats) ||
+      !Object.entries(fighter.stats).every(([category, stats]) =>
+        ["infantry", "lancer", "marksman"].includes(category) && isNumberRecord(stats) &&
+        Object.keys(stats).every((stat) => ["attack", "defense", "lethality", "health"].includes(stat)),
+      )) return false;
+  }
+  if (fighter.joiner_heroes !== undefined) {
+    if (Array.isArray(fighter.joiner_heroes)) {
+      if (!fighter.joiner_heroes.every((hero) => hero && typeof hero === "object" &&
+        typeof hero.name === "string" && isNumberRecord(hero.levels))) return false;
+    } else if (!fighter.joiner_heroes || typeof fighter.joiner_heroes !== "object" ||
+      Object.keys(fighter.joiner_heroes).length !== 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export function isReportImportRequest(value: unknown): value is ReportImportRequest {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const request = value as Partial<ReportImportRequest>;
+  const imported = request.report_import;
+  const source = request.source_report;
+  return !!imported && typeof imported === "object" && !Array.isArray(imported) &&
+    isReportImportFighter(imported.attacker) && isReportImportFighter(imported.defender) &&
+    typeof request.replicates === "number" && Number.isInteger(request.replicates) &&
+    request.replicates >= 1 && request.replicates <= 5000 &&
+    typeof request.rally_mode === "boolean" &&
+    !!source && typeof source === "object" && !Array.isArray(source) &&
+    typeof source.reference === "string" && source.reference.trim().length > 0 &&
+    source.report !== undefined && typeof source.raw_report_base64 === "string" &&
+    Array.isArray(source.warnings) && source.warnings.every((warning) => typeof warning === "string");
+}
+
 export interface SimulateSkillSummary {
   name: string;
   avg_activations: number;
@@ -295,6 +365,7 @@ export type SurfaceSweepApiResponse = SurfaceSweepResult & SimulationSaveMeta;
 
 export type SavedSimulationRequest =
   | SimulateRequestPayload
+  | ReportImportRequest
   | OptimizeRatioRequestPayload
   | BearSimRequestPayload
   | BearOptimizeRatioRequestPayload
@@ -309,18 +380,31 @@ export type SavedSimulationResult =
   | SurfaceSweepResult
   | TournamentResult;
 
-export interface SavedSimulationRunDocument {
+interface SavedSimulationRunIdentity {
   version: 1;
   id: string;
-  kind: SavedSimulationKind;
   created_at: string;
   kept?: boolean;
-  request: SavedSimulationRequest;
-  result: SavedSimulationResult;
 }
 
-export interface SavedSimulationRunResponse extends SavedSimulationRunDocument {
-  share_url: string;
+export type PendingReportSimulationRunDocument = SavedSimulationRunIdentity & {
+  kind: "simulate";
+  request: ReportImportRequest;
+  result: null;
+};
+
+export type SavedSimulationRunDocument = SavedSimulationRunIdentity & (
+  | { kind: SavedSimulationKind; request: SavedSimulationRequest; result: SavedSimulationResult }
+  | { kind: "simulate"; request: ReportImportRequest; result: null }
+);
+
+export type SavedSimulationRunResponse = SavedSimulationRunDocument & { share_url: string };
+
+export function isPendingReportSimulation(value: unknown): value is PendingReportSimulationRunDocument {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const doc = value as Partial<PendingReportSimulationRunDocument>;
+  return doc.version === 1 && typeof doc.id === "string" && typeof doc.created_at === "string" &&
+    doc.kind === "simulate" && doc.result === null && isReportImportRequest(doc.request);
 }
 
 export interface SavedSimulationRunListItem {
@@ -395,6 +479,12 @@ export function buildSimulationRunTitle(
   request: SavedSimulationRequest,
   kind: SavedSimulationKind = "simulate",
 ): string {
+  if (isReportImportRequest(request)) {
+    const { attacker, defender } = request.report_import;
+    const fighterLabel = (fighter: ReportImportFighter, fallback: string) =>
+      fighter.name?.trim() || Object.keys(fighter.heroes ?? {}).map(heroName).join("/") || fallback;
+    return `${fighterLabel(attacker, "Attacker")} vs ${fighterLabel(defender, "Defender")}`;
+  }
   if (isTournamentSavedSimulationKind(kind) && "groups" in request) {
     const labels = request.groups
       .map((group) => group.label.trim())

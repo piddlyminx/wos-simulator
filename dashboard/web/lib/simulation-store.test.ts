@@ -17,6 +17,7 @@ import type {
   BearOptimizeRatioResult,
   BearSimRequestPayload,
   BearSimResult,
+  ReportImportRequest,
   SimulateRequestPayload,
   SimulateApiResult,
 } from "@/lib/simulate-run";
@@ -26,6 +27,8 @@ import {
   buildSimulationRunTitle,
   buildSimulationShareUrl,
 } from "@/lib/simulate-run";
+import { POST as completeReportPost } from "../app/api/simulate/runs/[id]/complete/route";
+import { POST as saveRunPost } from "../app/api/simulate/runs/route";
 
 const side = {
   troops: { infantry: 100, lancer: 50, marksman: 25 },
@@ -178,6 +181,29 @@ const tournamentResult: TournamentResult = {
   },
 };
 
+const reportImport: ReportImportRequest = {
+  report_import: {
+    attacker: {
+      name: "Imported attacker",
+      heroes: { Jeronimo: { skill_1: 5, skill_2: 5 } },
+      troops: { infantry_t6: 100, lancer_t6: 50, marksman_t6: 25 },
+      stats: { infantry: { attack: 250, health: 310 } },
+    },
+    defender: {
+      name: "Imported defender",
+      troops: { infantry_t6: 75 },
+    },
+  },
+  replicates: 1,
+  rally_mode: true,
+  source_report: {
+    reference: "partial-report",
+    report: { unknownHero: 9999, preserved: { fight: [1, 2, 3] } },
+    raw_report_base64: "AAEC/w==",
+    warnings: ["Attacker infantry defense unavailable; using neutral 0%.", "Unsupported hero 9999 omitted."],
+  },
+};
+
 
 test("completed report decoding preserves usable inputs and evidence and requires a result", async () => {
   const request: SimulateRequestPayload = {
@@ -273,6 +299,132 @@ test("completed report runs save and reload usable inputs, warnings and source b
   assert.deepEqual(loaded?.result, pvpResult);
   assert.deepEqual(loaded?.request, request);
   assert.equal((await store.listSimulationRunsPage()).runs[0].id, saved.id);
+});
+
+test("imported links complete publicly under the same UID while preserving evidence and private metadata", databaseTest, async () => {
+  const importBefore = structuredClone(reportImport);
+  const pending = await store.saveReportImport(reportImport);
+  assert.equal(pending.result, null);
+  assert.equal(pending.kind, "simulate");
+  assert.deepEqual((await store.readSimulationRun(pending.id))?.request, reportImport);
+  const ownerHash = "e".repeat(64);
+  await store.simulationRunPool().query(
+    "UPDATE saved_simulation_runs SET owner_hash = $2, title = $3 WHERE id = $1",
+    [pending.id, ownerHash, "Preserved imported title"],
+  );
+  await store.setSimulationRunKept(pending.id, true, ownerHash);
+  const input: SimulateRequestPayload = {
+    ...pvpRequest,
+    source_report: {
+      reference: "must-not-replace-reference",
+      report: { mustNotReplace: true },
+      raw_report_base64: "must-not-replace-bytes",
+      warnings: ["Unsupported hero 9999 omitted.", "Defender health unavailable; using neutral 0%."],
+    },
+  };
+  const response = await completeReportPost(new Request(
+    `http://localhost/api/simulate/runs/${pending.id}/complete`,
+    { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ request: input, result: pvpResult }) },
+  ), { params: Promise.resolve({ id: pending.id }) });
+  assert.equal(response.status, 200);
+  const completed = await response.json();
+  assert.equal(completed.id, pending.id);
+  assert.equal(completed.created_at, pending.created_at);
+  assert.equal(completed.share_url, pending.share_url);
+  assert.equal(completed.kept, true);
+  assert.deepEqual(completed.result, pvpResult);
+  assert.deepEqual(completed.request, {
+    ...pvpRequest,
+    source_report: {
+      ...reportImport.source_report,
+      warnings: [...reportImport.source_report.warnings, "Defender health unavailable; using neutral 0%."],
+    },
+  });
+  assert.deepEqual(await store.readSimulationRun(pending.id), completed);
+  assert.equal("owner_hash" in completed, false);
+  const owned = await store.listSimulationRunsPage({ ownerHash, kept: true });
+  assert.deepEqual(owned.runs, [{
+    id: pending.id, kind: pending.kind, created_at: pending.created_at,
+    kept: true, share_url: pending.share_url, title: "Preserved imported title",
+  }]);
+  assert.equal(await store.setSimulationRunKept(pending.id, false, "f".repeat(64)), undefined);
+  assert.deepEqual(reportImport, importBefore);
+});
+
+test("completed imported and ordinary snapshots cannot be overwritten by later completions", databaseTest, async () => {
+  const pending = await store.saveReportImport(reportImport);
+  const first = await store.completeReportSimulation(pending.id, pvpRequest, pvpResult);
+  const differentRequest = { ...pvpRequest, rally_mode: false };
+  const differentResult = { ...pvpResult, outcomes: [1], summary: { ...pvpResult.summary, mean: 1 } };
+  assert.deepEqual(await store.completeReportSimulation(pending.id, differentRequest, differentResult), first);
+  assert.deepEqual(await store.readSimulationRun(pending.id), first);
+  const ordinary = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
+  assert.deepEqual(await store.completeReportSimulation(ordinary.id, differentRequest, differentResult), ordinary);
+  assert.deepEqual(await store.readSimulationRun(ordinary.id), ordinary);
+  assert.equal(await store.completeReportSimulation("missing-run-123", pvpRequest, pvpResult), null);
+  const bear = await store.saveSimulationRun("bear_simulate", bearRequest, bearResult);
+  await assert.rejects(store.completeReportSimulation(bear.id, pvpRequest, pvpResult), /Only report-import/);
+  assert.deepEqual(await store.readSimulationRun(bear.id), bear);
+});
+
+test("concurrent imported completions return the first committed winner without replacing its result", databaseTest, async () => {
+  const pending = await store.saveReportImport(reportImport);
+  const results = [
+    { ...pvpResult, outcomes: [1], summary: { ...pvpResult.summary, mean: 1 } },
+    { ...pvpResult, outcomes: [-1], summary: { ...pvpResult.summary, mean: -1 } },
+  ];
+  const client = await store.simulationRunPool().connect();
+  try {
+    await client.query("BEGIN");
+    await client.query("SELECT id FROM saved_simulation_runs WHERE id = $1 FOR UPDATE", [pending.id]);
+    const completions = results.map((result) => store.completeReportSimulation(pending.id, pvpRequest, result));
+    await client.query("COMMIT");
+    const [first, second] = await Promise.all(completions);
+    assert.deepEqual(second, first);
+    assert.ok(first);
+    assert.equal(first.id, pending.id);
+    const winningResult = first.result as SimulateApiResult;
+    assert.ok(winningResult.summary.mean === 1 || winningResult.summary.mean === -1);
+    assert.deepEqual(winningResult, winningResult.summary.mean === 1 ? results[0] : results[1]);
+    assert.deepEqual(await store.readSimulationRun(pending.id), first);
+    const losingResult = winningResult.summary.mean === 1 ? results[1] : results[0];
+    assert.deepEqual(await store.completeReportSimulation(pending.id, pvpRequest, losingResult), first);
+  } finally {
+    client.release();
+  }
+});
+
+test("only dedicated validated report imports can persist null results, and invalid completion leaves them pending", databaseTest, async () => {
+  for (const kind of ["simulate", "optimize_ratio", "bear_simulate", "bear_optimize_ratio", "ratio_explorer", "tournament"] as const) {
+    await assert.rejects(store.saveSimulationRun(kind, reportImport, null as unknown as SimulateApiResult), /completed simulation result/);
+    if (kind !== "simulate") {
+      assert.throws(() => store.assertSavedSimulationDoc({
+        version: 1, id: "invalid-pending-run", kind, created_at: new Date().toISOString(),
+        request: reportImport, result: null,
+      }), /malformed/);
+    }
+  }
+  const pending = await store.saveReportImport(reportImport);
+  for (const invalid of [
+    { ...reportImport, replicates: 0 },
+    { ...reportImport, replicates: 5001 },
+    { ...reportImport, replicates: 1.5 },
+    { ...reportImport, report_import: { ...reportImport.report_import, attacker: { troops: { infantry_t6: 0 } } } },
+    { ...reportImport, report_import: { ...reportImport.report_import, defender: { troops: { infantry_t6: -1 } } } },
+  ]) {
+    await assert.rejects(store.saveReportImport(invalid), /Invalid report import/);
+  }
+  await assert.rejects(store.completeReportSimulation(pending.id, pvpRequest, { ...pvpResult, outcomes: [] }), /completed simulation result/);
+  await assert.rejects(store.completeReportSimulation(pending.id, {
+    ...pvpRequest, attacker: { ...side, troops: { infantry: 0, lancer: 0, marksman: 0 } },
+  }, pvpResult), /normalized simulation request/);
+  assert.deepEqual(await store.readSimulationRun(pending.id), pending);
+  const collection = await saveRunPost(new Request("http://localhost/api/simulate/runs", {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ kind: "simulate", request: reportImport, result: null }),
+  }));
+  assert.equal(collection.status, 400);
+  assert.deepEqual((await store.listSimulationRuns()).map((run) => run.id), [pending.id]);
 });
 
 test("owner authorization preserves kept, denied and missing outcomes without leaking ownership", databaseTest, async () => {

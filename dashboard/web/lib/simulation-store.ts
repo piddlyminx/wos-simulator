@@ -7,12 +7,18 @@ import {
   buildSimulationShareUrl,
   buildSimulationRunTitle,
   isSavedSimulationKind,
+  isPendingReportSimulation,
+  isReportImportRequest,
+  type ReportImportRequest,
   type SavedSimulationKind,
   type SavedSimulationRequest,
   type SavedSimulationResult,
   type SavedSimulationRunListItem,
   type SavedSimulationRunDocument,
   type SavedSimulationRunResponse,
+  type SimulateApiResult,
+  type SimulateRequestPayload,
+  type SimulateSidePayload,
 } from "./simulate-run";
 
 const ID_RE = /^[A-Za-z0-9_-]{8,128}$/;
@@ -94,7 +100,7 @@ export function assertSavedSimulationDoc(value: unknown): SavedSimulationRunDocu
     doc.version !== 1 || typeof doc.id !== "string" || !ID_RE.test(doc.id) ||
     !isSavedSimulationKind(doc.kind) || typeof doc.created_at !== "string" ||
     !Number.isFinite(Date.parse(doc.created_at)) || doc.request === undefined ||
-    !doc.result || typeof doc.result !== "object"
+    (doc.result === null ? !isPendingReportSimulation(doc) : !doc.result || typeof doc.result !== "object" || Array.isArray(doc.result))
   ) throw new Error("Saved simulation document is malformed");
   return doc as SavedSimulationRunDocument;
 }
@@ -114,19 +120,131 @@ export async function saveSimulationRun(
   result: SavedSimulationResult,
   ownerHash?: string,
 ): Promise<SavedSimulationRunResponse> {
+  if (!result || typeof result !== "object" || Array.isArray(result)) throw new Error("A completed simulation result is required");
   assertSimulationRunOwner(ownerHash);
   const doc = assertSavedSimulationDoc({
     version: 1, id: randomUUID(), kind, created_at: new Date().toISOString(), request, result,
   });
+  return insertSimulationRun(doc, ownerHash);
+}
+
+async function insertSimulationRun(
+  doc: SavedSimulationRunDocument,
+  ownerHash?: string,
+): Promise<SavedSimulationRunResponse> {
   const payload = await gzipDocument(Buffer.from(JSON.stringify(doc), "utf8"));
   // A single INSERT commits payload and all listing/authorization metadata atomically.
   await simulationRunPool().query(
     `INSERT INTO saved_simulation_runs
       (id, kind, created_at, created_at_text, title, kept, owner_hash, payload, payload_size)
      VALUES ($1, $2, $3::text::timestamptz, $3::text, $4, false, $5, $6, $7)`,
-    [doc.id, kind, doc.created_at, buildSimulationRunTitle(request, kind), ownerHash ?? null, payload, payload.length],
+    [doc.id, doc.kind, doc.created_at, buildSimulationRunTitle(doc.request, doc.kind), ownerHash ?? null, payload, payload.length],
   );
   return withShareUrl(doc);
+}
+
+export async function saveReportImport(request: ReportImportRequest): Promise<SavedSimulationRunResponse> {
+  if (!isReportImportRequest(request)) throw new Error("Invalid report import configuration");
+  return insertSimulationRun(assertSavedSimulationDoc({
+    version: 1, id: randomUUID(), kind: "simulate", created_at: new Date().toISOString(),
+    request, result: null,
+  }));
+}
+
+function isCanonicalSimulationSide(value: unknown): value is SimulateSidePayload {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const side = value as Partial<SimulateSidePayload>;
+  const categories = ["infantry", "lancer", "marksman"] as const;
+  if (!side.troops || !side.troop_types || !side.heroes || !side.stats) return false;
+  if (!categories.every((category) =>
+    Number.isSafeInteger(side.troops![category]) && side.troops![category] >= 0 &&
+    typeof side.troop_types![category] === "string" && side.troop_types![category].length > 0
+  ) || !categories.some((category) => side.troops![category] > 0)) return false;
+  if (!categories.every((category) => {
+    const hero = side.heroes![category];
+    return hero && (hero.name === null || typeof hero.name === "string") &&
+      Array.isArray(hero.skills) && hero.skills.length === 4 &&
+      hero.skills.every((level) => Number.isFinite(level) && level >= 0);
+  })) return false;
+  if (!["inf", "lanc", "mark"].every((category) => {
+    const stats = side.stats![category as keyof SimulateSidePayload["stats"]];
+    return Array.isArray(stats) && stats.length === 4 && stats.every(Number.isFinite);
+  })) return false;
+  return Array.isArray(side.joiners) && side.joiners.every((joiner) =>
+    joiner && typeof joiner.name === "string" && Number.isFinite(joiner.skill_1) && joiner.skill_1 >= 0,
+  );
+}
+
+function assertReportSimulationCompletion(request: SimulateRequestPayload, result: SimulateApiResult): void {
+  if (!request || typeof request !== "object" || Array.isArray(request) ||
+    !isCanonicalSimulationSide(request.attacker) || !isCanonicalSimulationSide(request.defender) ||
+    !Number.isInteger(request.replicates) || request.replicates < 1 || request.replicates > 5000 ||
+    typeof request.rally_mode !== "boolean" ||
+    (request.source_report !== undefined && (
+      !request.source_report || !Array.isArray(request.source_report.warnings) ||
+      !request.source_report.warnings.every((warning) => typeof warning === "string")
+    ))
+  ) throw new Error("A normalized simulation request is required");
+  if (!result || typeof result !== "object" || Array.isArray(result) ||
+    result.replicates !== request.replicates || !Array.isArray(result.outcomes) ||
+    result.outcomes.length !== result.replicates || !result.outcomes.every(Number.isFinite) ||
+    !result.summary || !result.per_side_skills
+  ) throw new Error("A completed simulation result matching the request is required");
+  const summary = result.summary;
+  if (![
+    summary.mean, summary.std, summary.attacker_win_rate, summary.avg_skill_activations,
+    summary.avg_skill_kills, summary.avg_attacker_activations, summary.avg_defender_activations,
+    summary.avg_attacker_kills, summary.avg_defender_kills,
+  ].every(Number.isFinite) ||
+    ![summary.best, summary.worst].every((extreme) => extreme &&
+      Number.isFinite(extreme.value) && ["attacker", "defender", "draw"].includes(extreme.winner),
+    ) ||
+    ![result.per_side_skills.attacker, result.per_side_skills.defender].every((skills) =>
+      Array.isArray(skills) && skills.every((skill) => skill && typeof skill.name === "string" &&
+        Number.isFinite(skill.avg_activations) && Number.isFinite(skill.avg_kills)),
+    )
+  ) throw new Error("The completed simulation result is malformed");
+}
+
+export async function completeReportSimulation(
+  id: string,
+  request: SimulateRequestPayload,
+  result: SimulateApiResult,
+): Promise<SavedSimulationRunResponse | null> {
+  assertSimulationRunId(id);
+  return withSimulationRunTransaction(async (client) => {
+    // Follow Keep's table-before-row lock order so maintenance cannot race completion.
+    await client.query("LOCK TABLE saved_simulation_runs IN ROW EXCLUSIVE MODE");
+    const selected = await client.query<{ payload: Buffer; kept: boolean }>(
+      "SELECT payload, kept FROM saved_simulation_runs WHERE id = $1 FOR UPDATE", [id],
+    );
+    const row = selected.rows[0];
+    if (!row) return null;
+    const doc = await decodeSimulationRun(row.payload);
+    if (doc.id !== id) throw new Error("Saved simulation document identity mismatch");
+    if (doc.kind !== "simulate") throw new Error("Only report-import simulations can be completed");
+    // The row lock makes the first committed result authoritative for every visitor.
+    if (!isPendingReportSimulation(doc)) return withShareUrl(doc, row.kept);
+    assertReportSimulationCompletion(request, result);
+    const originalSource = doc.request.source_report;
+    const completed = assertSavedSimulationDoc({
+      ...doc,
+      request: {
+        ...request,
+        source_report: {
+          ...originalSource,
+          warnings: [...new Set([...originalSource.warnings, ...(request.source_report?.warnings ?? [])])],
+        },
+      },
+      result,
+    });
+    const payload = await gzipDocument(Buffer.from(JSON.stringify(completed), "utf8"));
+    await client.query(
+      "UPDATE saved_simulation_runs SET payload = $2, payload_size = $3 WHERE id = $1",
+      [id, payload, payload.length],
+    );
+    return withShareUrl(completed, row.kept);
+  });
 }
 
 export async function readSimulationRun(id: string): Promise<SavedSimulationRunResponse | null> {

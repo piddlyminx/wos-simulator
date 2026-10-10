@@ -16,6 +16,8 @@ import {
 } from "@/lib/optimize-ratio";
 import {
   buildSimulationRunTitle,
+  isPendingReportSimulation,
+  type ReportImportRequest,
   type OptimizeRatioApiResponse,
   type OptimizeRatioRequestPayload,
   type SavedSimulationKind,
@@ -75,6 +77,7 @@ export interface SavedRunFormState {
   surfaceShownPointsPerEdge: number | null;
   savedRunMeta: SavedRunMeta | null;
   savedRunError: string | null;
+  pendingReportImport: ReportImportRequest | null;
 }
 
 export function defaultSavedRunFormState(
@@ -105,6 +108,7 @@ export function defaultSavedRunFormState(
     surfaceShownPointsPerEdge: null,
     savedRunMeta: null,
     savedRunError: error ?? null,
+    pendingReportImport: null,
   };
 }
 
@@ -124,6 +128,21 @@ export function withSaveMeta<T extends object>(
 export function savedRunToFormState(
   saved: SavedSimulationRunResponse,
 ): SavedRunFormState {
+  if (isPendingReportSimulation(saved)) {
+    return {
+      ...defaultSavedRunFormState(),
+      replicates: saved.request.replicates,
+      rallyMode: saved.request.rally_mode,
+      pendingReportImport: saved.request,
+      savedRunMeta: {
+        id: saved.id,
+        kind: saved.kind,
+        createdAt: saved.created_at,
+        shareUrl: saved.share_url,
+        title: buildSimulationRunTitle(saved.request, saved.kind),
+      },
+    };
+  }
   const request = saved.request as SimulateRequestPayload | SurfaceSweepPayload;
   const simulateReplicates =
     saved.kind === "simulate" && "replicates" in request
@@ -157,7 +176,7 @@ export function savedRunToFormState(
   if (saved.kind === "simulate") {
     return {
       ...base,
-      result: withSaveMeta(saved.result as SimulateApiResponse, saved),
+      result: saved.result === null ? null : withSaveMeta(saved.result as SimulateApiResponse, saved),
     };
   }
 
