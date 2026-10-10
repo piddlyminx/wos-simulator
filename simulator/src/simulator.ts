@@ -176,9 +176,10 @@ function setupRuntime(
   recorder: BattleRecorder,
   runtimeSkills: RuntimeSkills,
   staticProfile: StaticDamageProfile,
-  preBattleEffects: ActiveEffect[]
+  preBattleEffects: ActiveEffect[],
+  rng?: SimulationOptions["rng"]
 ): Runtime {
-  const runtime = createRuntime(fighters, createSeededRng(seed), runtimeSkills, staticProfile);
+  const runtime = createRuntime(fighters, rng ?? createSeededRng(seed), runtimeSkills, staticProfile);
   recorder.recordStaticProfile(fighters, preBattleEffects);
   recordPreBattleSkills(runtime, recorder);
   triggerSkills("battle_start", 0, runtime.skills.battleStart, runtime, recorder);
@@ -212,7 +213,7 @@ function runBattle(
   const preBattleEffects = prepared?.preBattleEffects ?? activatePreBattleEffects(runtimeSkills, input);
   const staticProfile = prepared?.staticProfile ?? buildStaticDamageProfile(fighters, preBattleEffects);
   const recorder = recorderFor(options, fighters);
-  const runtime = setupRuntime(fighters, input.seed ?? "simulator-default", recorder, runtimeSkills, staticProfile, preBattleEffects);
+  const runtime = setupRuntime(fighters, input.seed ?? "simulator-default", recorder, runtimeSkills, staticProfile, preBattleEffects, options.rng);
   return runLoop(input, fighters, runtime, recorder, options, loopOptions);
 }
 
