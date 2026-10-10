@@ -1718,7 +1718,6 @@ export default function SimulateClient({
           <strong>Imported game report {sourceReport.reference}</strong>
           <p>The saved result is a simulator prediction, not the game outcome.</p>
           <p>Reported equipment, hero levels and other stat bonuses are included in the effective stats; simulated pre-battle bonuses have been removed from the editable base stats to avoid double counting.</p>
-          <p>Troop rows preserve mixed tiers. Add, edit or remove individual rows to change the composition; category totals are calculated from those rows.</p>
           {sourceReport.warnings.length > 0 && (
             <ul className="list-disc list-inside mt-1" style={{ color: "var(--sim-yellow)" }}>
               {sourceReport.warnings.map(warning => <li key={warning}>{warning}</li>)}
