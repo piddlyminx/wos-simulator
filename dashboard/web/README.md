@@ -181,8 +181,8 @@ server preset store or preset API.
 
 The public dashboard has no dependency on the private headless game client.
 Its builds, tests and Docker images do not require or include C2. Private
-integrations run separately and may save standard simulation requests through
-the existing saved-run storage.
+integrations run separately and save extracted report inputs through the shared
+saved-run storage; the report worker does not include or run the battle engine.
 
 `request.source_report` retains an opaque decoded report, original packed bytes
 as base64, a reference and import warnings. The dashboard preserves this artifact
@@ -190,15 +190,26 @@ when rerunning and displays the reference and warnings; it does not decode the
 game protocol. The game's internal seed stays in the artifact, not the report
 header or simulator RNG. Predictions store their own simulator seed.
 
-Imports salvage usable fields independently and list every omission both above
+Imports salvage usable fields independently and list actual omissions both above
 the setup and beside the results. Missing or unusable combat stats use neutral
 0% bonuses, with field-specific warnings; these defaults are not game observations.
-If each side has at least one usable supported troop, the private watcher
-simulates immediately, saves a normal completed run, and replies with its URL.
-Only an army with no usable troops prevents report import. Warnings never block
-simulation, and there are no drafts, acknowledgements, or review workflow.
-Players can edit any incorrectly imported/defaulted values and rerun normally.
-The original source artifact and all import warnings survive simulation,
+If each side has at least one usable supported troop, the private watcher saves
+an extracted configuration with `result: null` and immediately replies with its
+stable URL. Only an army with no usable troops prevents report import.
+
+Opening an uncomputed report automatically normalizes its observed stats against
+the public hero catalog and runs 1,000 stochastic replicates in the existing
+browser Web Worker. `POST /api/simulate/runs/[id]/complete` atomically stores the
+normalized request and results under the original UID. Concurrent completions
+reuse the first saved result; later visits load it without rerunning. Completion
+preserves source evidence and saved-run metadata, and never overwrites a completed
+snapshot. The game-report seed is not used to seed the prediction.
+
+Warnings never block simulation: there are no acknowledgements or review gates,
+and warning panels are absent when there are no actual warnings. Expert and extra
+troop-skill evidence remains in the source artifact without a generic informational
+warning. Players can edit imported/defaulted values and rerun normally, saving a
+new snapshot. The source artifact and actual import warnings survive simulation,
 optimisation and ratio exploration. Omitted/defaulted data can affect predictions.
 
 Both simulator presentations keep three fixed primary troop rows: infantry,

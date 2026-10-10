@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import type {
   OptimizeRatioRequestPayload,
+  ReportImportRequest,
   SavedSimulationRunResponse,
   SimulateApiResult,
   SimulateRequestPayload,
@@ -15,7 +16,6 @@ import {
   DEFAULT_SURFACE_REPLICATES,
   defaultSavedRunFormState,
   savedRunToFormState,
-  withSaveMeta,
 } from "./saved-run-state";
 
 test("defaultSavedRunFormState carries the initial load error only", () => {
@@ -83,6 +83,42 @@ test("warned report runs restore predictions and neutral stats without changing 
   }
   state.attacker.stats.infantry.defense = 123;
   assert.equal(JSON.stringify(saved), snapshot);
+});
+
+test("pending report imports expose configuration without fabricating a completed result or reading ordinary side payloads", () => {
+  const request: ReportImportRequest = {
+    report_import: {
+      attacker: { troops: { infantry_t6: 200 }, stats: { infantry: { attack: 450 } } },
+      defender: { troops: { lancer_t6: 100 } },
+    },
+    replicates: 1000,
+    rally_mode: true,
+    source_report: {
+      reference: "pending-report",
+      report: { untouched: ["unrecognized-skill"] },
+      raw_report_base64: "AAEC/w==",
+      warnings: ["Defender bonuses are unavailable."],
+    },
+  };
+  const saved: SavedSimulationRunResponse = {
+    version: 1,
+    id: "pending-id",
+    kind: "simulate",
+    created_at: "2026-01-02T03:04:05.000Z",
+    share_url: "/simulate?run=pending-id",
+    request,
+    result: null,
+  };
+  const before = JSON.stringify(saved);
+  const state = savedRunToFormState(saved);
+  assert.equal(state.result, null);
+  assert.equal(state.optimizeResult, null);
+  assert.equal(state.surfaceResult, null);
+  assert.deepEqual(state.pendingReportImport, request);
+  assert.equal(state.savedRunMeta?.id, saved.id);
+  assert.equal(state.replicates, 1000);
+  assert.equal(state.rallyMode, true);
+  assert.equal(JSON.stringify(saved), before);
 });
 
 test("savedRunToFormState hydrates optimize settings from a single parser", () => {
@@ -180,18 +216,6 @@ test("savedRunToFormState keeps explorer replicates out of simulate settings", (
   assert.equal(state.surfaceReplicates, 37);
 });
 
-test("withSaveMeta attaches canonical saved-run metadata", () => {
-  const saved = savedRun("simulate", baseRequest());
-  const result = withSaveMeta({ value: 1 }, saved);
-
-  assert.deepEqual(result, {
-    value: 1,
-    saved_run_id: "run-1",
-    saved_at: "2026-01-02T03:04:05.000Z",
-    saved_kind: "simulate",
-    share_url: "/simulate?run=run-1",
-  });
-});
 
 function savedRun(
   kind: SavedSimulationRunResponse["kind"],
