@@ -7,7 +7,7 @@
 # shadowing node_modules; package-lock changes are picked up by rebuilding the
 # image.
 
-FROM node:20-bookworm-slim AS base
+FROM node:22-bookworm-slim AS base
 
 WORKDIR /repo
 
