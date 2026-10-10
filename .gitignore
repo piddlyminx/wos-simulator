@@ -7,6 +7,7 @@ __pycache__
 .history
 .vscode/
 .omp/
+.claude/
 battle_specs_manual
 tmp
 test_results/runs/
