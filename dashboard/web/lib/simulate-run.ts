@@ -96,6 +96,9 @@ export interface ReportImportFighter {
     Partial<Record<"attack" | "defense" | "lethality" | "health", number>>
   >>;
   joiner_heroes?: Array<{ name: string; levels: Record<string, number> }> | Record<string, never>;
+  stat_modifiers?: Partial<SimulateStatModifiersPayload>;
+  pet_modifiers?: Partial<SimulatePetModifiersPayload>;
+  gareth?: number;
 }
 
 export interface ReportImportRequest {
@@ -138,6 +141,14 @@ function isReportImportFighter(value: unknown): value is ReportImportFighter {
       return false;
     }
   }
+  for (const [modifiers, keys] of [
+    [fighter.stat_modifiers, ["attack", "defense", "lethality", "health", "enemy_attack", "enemy_defense"]],
+    [fighter.pet_modifiers, ["attack", "defense", "lethality", "health", "enemy_defense", "enemy_lethality", "enemy_health"]],
+  ] as const) {
+    if (modifiers !== undefined && (!isNumberRecord(modifiers) ||
+      !Object.keys(modifiers).every((key) => (keys as readonly string[]).includes(key)))) return false;
+  }
+  if (fighter.gareth !== undefined && (!Number.isFinite(fighter.gareth) || fighter.gareth < 0)) return false;
   return true;
 }
 

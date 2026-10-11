@@ -73,6 +73,15 @@ function simulationSide(fighter: ReportImportFighter, config: SimulatorConfig, l
     joiners: [],
     stat_profile_name: fighter.name ?? null,
     stats: { inf: [0, 0, 0, 0], lanc: [0, 0, 0, 0], mark: [0, 0, 0, 0] },
+    stat_modifiers: {
+      attack: 0, defense: 0, lethality: 0, health: 0, enemy_attack: 0, enemy_defense: 0,
+      ...fighter.stat_modifiers,
+    },
+    pet_modifiers: {
+      attack: 0, defense: 0, lethality: 0, health: 0, enemy_defense: 0, enemy_lethality: 0, enemy_health: 0,
+      ...fighter.pet_modifiers,
+    },
+    gareth: fighter.gareth ?? 0,
   };
   for (const [key, count] of Object.entries(fighter.troops ?? {})) {
     const troop = config.troopStats[key];

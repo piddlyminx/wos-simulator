@@ -75,6 +75,58 @@ test("reported widget totals are not counted twice, while unobserved stats remai
   assert.ok(normalized.source_report!.warnings.some(warning => warning.includes("lancer attack")));
 });
 
+test("city, pet and Gareth context is removed once alongside heroes and survives form round trips", () => {
+  const input = imported();
+  const attacker = input.report_import.attacker;
+  const defender = input.report_import.defender;
+  attacker.heroes = defender.heroes = { Jeronimo: { skill_4: 5 } };
+  attacker.stat_modifiers = { attack: 20, defense: 20, lethality: 20, health: 20, enemy_attack: -20, enemy_defense: -20 };
+  defender.stat_modifiers = { ...attacker.stat_modifiers };
+  attacker.gareth = 1;
+  defender.gareth = 4;
+  defender.pet_modifiers = {
+    attack: 10, defense: 10, lethality: 10, health: 10,
+    enemy_defense: -10, enemy_lethality: -5, enemy_health: -5,
+  };
+  // Concrete final totals for base bonuses [400, 300, 250, 350].
+  // City, pets and the attacker's 15% rally widget share the additive numerator;
+  // opposing city, pets and Gareth share the additive denominator.
+  attacker.stats!.infantry = {
+    attack: 462.5, defense: 480 / 1.3 - 100,
+    lethality: 420 / 1.09 - 100, health: 540 / 1.05 - 100,
+  };
+  defender.stats!.infantry = {
+    attack: 650 / 1.2 - 100, defense: 520 / 1.2 - 100,
+    lethality: 455 / 1.01 - 100, health: 485,
+  };
+  attacker.stats!.lancer = { attack: Number.NaN, defense: -100 };
+  attacker.stats!.marksman = undefined;
+  const before = JSON.stringify(input);
+  const config = loadSimulatorConfig();
+  const normalized = normalizeReportImport(input, config);
+  for (const side of ["attacker", "defender"] as const) {
+    normalized[side].stats.inf.forEach((value, index) => {
+      assert.ok(Math.abs(value - [400, 300, 250, 350][index]) < 1e-9, `${side} base stat ${index}: ${value}`);
+    });
+  }
+  assert.deepEqual(normalized.attacker.stats.lanc, [0, 0, 0, 0]);
+  assert.deepEqual(normalized.attacker.stats.mark, [0, 0, 0, 0]);
+  const rerun = toApiPayload(sideFromPayload(normalized.attacker), sideFromPayload(normalized.defender), 1000, true);
+  const compiled = prepareBattle(toBattleInput(rerun, 1), config);
+  const factors = buildStaticDamageBucketFactors(compiled.fighters, compiled.preBattleEffects);
+  for (const side of ["attacker", "defender"] as const) {
+    for (const [index, stat] of (["attack", "defense", "lethality", "health"] as const).entries()) {
+      const up = factors[side].infantry[STATIC_BUCKET_INDEX[`passive.${stat}.up`]];
+      const down = factors[side].infantry[STATIC_BUCKET_INDEX[`passive.${stat}.down`]];
+      const effective = (100 + rerun[side].stats.inf[index]) * up / down - 100;
+      assert.ok(Math.abs(effective - input.report_import[side].stats!.infantry![stat]!) < 1e-9);
+    }
+  }
+  assert.deepEqual(rerun.attacker.stats.lanc, [0, 0, 0, 0]);
+  assert.deepEqual(rerun.attacker.stats.mark, [0, 0, 0, 0]);
+  assert.equal(JSON.stringify(input), before);
+});
+
 test("unsupported troops, heroes and skills are omitted independently rather than rejecting usable armies", () => {
   const input = imported();
   input.report_import.attacker.troops!.unknown_troop = 100;
