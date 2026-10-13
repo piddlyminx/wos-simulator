@@ -13,6 +13,7 @@ is organized around three public projects plus shared data and documentation.
 ├── docs/          # Design docs, plans, and specs
 └── test_results/  # Calibration DB (dashboard.sqlite) + baseline
 ```
+
 ## Components
 
 ### `simulator/` — the primary simulator
