@@ -480,6 +480,7 @@ export default function SimulateClient({
   const [traceError, setTraceError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
+  const [uploadTarget, setUploadTarget] = useState<"both" | "attacker" | "defender">("both");
   const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
   const [sourceReport, setSourceReport] = useState<SimulateRequestPayload["source_report"]>(
     () => (initialSavedRun?.request as SimulateRequestPayload | undefined)?.source_report,
@@ -1102,6 +1103,16 @@ export default function SimulateClient({
     setLoadedPreset(side, id, name);
   }
 
+  const openBothUpload = () => {
+    setUploadTarget("both");
+    setUploadOpen(true);
+  };
+
+  const openSideUpload = (side: "attacker" | "defender") => {
+    setUploadTarget(side);
+    setUploadOpen(true);
+  };
+
   function applyUpload(submission: UploadReportSubmission) {
     const {
       ocr,
@@ -1110,7 +1121,49 @@ export default function SimulateClient({
       sidesSwapped: modalSwapped,
       skill4Levels,
       activeModifiers,
+      selectedReportSide,
     } = submission;
+
+    if (uploadTarget === "attacker") {
+      const ocrSide = selectedReportSide === "left" ? ocr.attacker : ocr.defender;
+      setAttacker((prev) =>
+        mergeSideFromOcr(
+          prev,
+          ocrSide,
+          heroes.attacker,
+          modalRally,
+          "attacker",
+          skill4Levels.attacker,
+          activeModifiers.attacker,
+          activeModifiers.defender,
+        ),
+      );
+      setLoadedPreset("attacker", null, null);
+      setSourceReport(undefined);
+      setUploadWarnings(ocr.warnings ?? []);
+      return;
+    }
+
+    if (uploadTarget === "defender") {
+      const ocrSide = selectedReportSide === "left" ? ocr.attacker : ocr.defender;
+      setDefender((prev) =>
+        mergeSideFromOcr(
+          prev,
+          ocrSide,
+          heroes.defender,
+          modalRally,
+          "defender",
+          skill4Levels.defender,
+          activeModifiers.defender,
+          activeModifiers.attacker,
+        ),
+      );
+      setLoadedPreset("defender", null, null);
+      setSourceReport(undefined);
+      setUploadWarnings(ocr.warnings ?? []);
+      return;
+    }
+
     // Align main-page rally toggle with the modal's choice so the user sees a
     // consistent state (main form already handles rally layout on its own).
     if (modalRally !== rallyMode) setRallyMode(modalRally);
@@ -1143,6 +1196,9 @@ export default function SimulateClient({
         activeModifiers.attacker,
       ),
     );
+    setLoadedPreset("attacker", null, null);
+    setLoadedPreset("defender", null, null);
+    setSourceReport(undefined);
     setUploadWarnings(ocr.warnings ?? []);
   }
 
@@ -1707,7 +1763,7 @@ export default function SimulateClient({
     setMobileTab,
     setRunMode,
     setRunOptionsOpen,
-    openReportUpload: () => setUploadOpen(true),
+    openReportUpload: openBothUpload,
     runSimulation,
     runOptimizeRatio,
     runSurfaceExplore,
@@ -1744,7 +1800,7 @@ export default function SimulateClient({
           <div className="sim-start-file-actions" data-tour="simulate-start-actions">
             <button
               type="button"
-              onClick={() => setUploadOpen(true)}
+              onClick={openBothUpload}
               className="sim-upload-primary px-3 py-2"
               data-tour="upload-report"
             >
@@ -1923,6 +1979,7 @@ export default function SimulateClient({
             syncStatsOnHeroChange={syncStatsOnHeroChange}
             loadedPresetName={loadedPresetNames.attacker}
             onOpenPreset={() => openStatPresetModal("attacker")}
+            onOpenUpload={() => openSideUpload("attacker")}
             variant={presentation}
           />
         </div>
@@ -1966,6 +2023,7 @@ export default function SimulateClient({
             syncStatsOnHeroChange={syncStatsOnHeroChange}
             loadedPresetName={loadedPresetNames.defender}
             onOpenPreset={() => openStatPresetModal("defender")}
+            onOpenUpload={() => openSideUpload("defender")}
             variant={presentation}
           />
         </div>
@@ -2111,6 +2169,8 @@ export default function SimulateClient({
         onApply={applyUpload}
         initialRallyMode={rallyMode}
         initialSidesSwapped={sidesSwapped}
+        selectionMode={uploadTarget === "both" ? "both" : "single"}
+        targetSide={uploadTarget === "both" ? undefined : uploadTarget}
       />
 
       {result && (

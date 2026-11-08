@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -276,9 +277,12 @@ class ReportStatsParserTests(unittest.TestCase):
         expected_by_report = json.loads((ROOT / "tests" / "fixtures" / "dashboard_report_expected.json").read_text())
         report_dir = ROOT / "dashboard" / "test_reports"
         report_paths = sorted(
-            path
-            for pattern in ("*.png", "*.jpg", "*.jpeg")
-            for path in report_dir.glob(pattern)
+            [
+                path
+                for pattern in ("*.png", "*.jpg", "*.jpeg")
+                for path in report_dir.glob(pattern)
+            ],
+            key=lambda path: path.name,
         )
         self.assertEqual([path.name for path in report_paths], sorted(path.name for path in report_paths))
         self.assertEqual(set(path.name for path in report_paths), set(expected_by_report))
@@ -346,9 +350,15 @@ class ReportStatsParserTests(unittest.TestCase):
         assert image is not None
         padded = cv2.copyMakeBorder(image, 120, 90, 160, 140, cv2.BORDER_CONSTANT, value=(0, 0, 0))
 
-        with tempfile.NamedTemporaryFile(suffix=".png") as handle:
-            cv2.imwrite(handle.name, padded)
-            result = extract_report_stats_and_troops(handle.name)
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as handle:
+            name = handle.name
+            handle.close()
+            try:
+                cv2.imwrite(name, padded)
+                result = extract_report_stats_and_troops(name)
+            finally:
+                if os.path.exists(name):
+                    os.unlink(name)
 
         self.assertIn("content_box", result["meta"])
         for side in ("left", "right"):
@@ -379,9 +389,15 @@ class ReportStatsParserTests(unittest.TestCase):
         x, y = 350, 90
         desktop[y : y + report.shape[0], x : x + report.shape[1]] = report
 
-        with tempfile.NamedTemporaryFile(suffix=".png") as handle:
-            cv2.imwrite(handle.name, desktop)
-            result = extract_report_stats_and_troops(handle.name)
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as handle:
+            name = handle.name
+            handle.close()
+            try:
+                cv2.imwrite(name, desktop)
+                result = extract_report_stats_and_troops(name)
+            finally:
+                if os.path.exists(name):
+                    os.unlink(name)
 
         self.assertEqual(result["meta"]["ocr_strategy"][:2], ["tesseract:embedded-report", "tesseract:panel"])
         self.assertAlmostEqual(result["meta"]["content_box"]["x1"], x, delta=20)
