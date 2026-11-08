@@ -102,9 +102,12 @@ class OCRItem:
 def _get_rapid() -> Any:
     global _rapid_ocr
     if _rapid_ocr is None:
-        from ocr import RapidOCR
-
-        _rapid_ocr = RapidOCR(use_angle_cls=False)
+        try:
+            from rapidocr import RapidOCR
+            _rapid_ocr = RapidOCR()
+        except (TypeError, ImportError):
+            from ocr import RapidOCR
+            _rapid_ocr = RapidOCR(use_angle_cls=False)
     return _rapid_ocr
 
 
@@ -118,13 +121,17 @@ def _get_fast_rapid() -> Any:
     """
     global _fast_rapid_ocr
     if _fast_rapid_ocr is None:
-        from ocr import RapidOCR
-        from rapidocr import ModelType
-
-        _fast_rapid_ocr = RapidOCR(
-            use_angle_cls=False,
-            params={"Det.model_type": ModelType.MOBILE, "Det.limit_side_len": 160},
-        )
+        try:
+            from rapidocr import RapidOCR, ModelType
+            _fast_rapid_ocr = RapidOCR(
+                params={"Det.model_type": ModelType.MOBILE, "Det.limit_side_len": 160},
+            )
+        except (TypeError, ImportError):
+            try:
+                from ocr import RapidOCR
+                _fast_rapid_ocr = RapidOCR(use_angle_cls=False)
+            except Exception:
+                _fast_rapid_ocr = _get_rapid()
     return _fast_rapid_ocr
 
 
@@ -324,10 +331,16 @@ def _ocr_pass(
 ) -> list[OCRItem]:
     processed = _preprocess_image(img_bgr, scale=scale, sharpen=sharpen, clahe=clahe)
     result = (_get_fast_rapid() if fast else _get_rapid())(processed)
-    if not result or not result[0]:
+    if hasattr(result, "boxes") and result.boxes is not None:
+        entries = list(zip(result.boxes, result.txts, result.scores))
+    elif result and isinstance(result, (list, tuple)) and result[0]:
+        entries = result[0]
+    else:
+        entries = []
+    if not entries:
         return []
     items: list[OCRItem] = []
-    for box, text, confidence in result[0]:
+    for box, text, confidence in entries:
         xs = [point[0] for point in box]
         ys = [point[1] for point in box]
         items.append(
@@ -1670,10 +1683,17 @@ def _append_troop_detail(
     )
 
 
-def extract_report_stats_and_troops(image_path: str | Path, *, debug_outdir: str | None = None) -> dict[str, Any]:
-    img_bgr = cv2.imread(str(image_path))
-    if img_bgr is None:
-        raise FileNotFoundError(f"Could not read image: {image_path}")
+def extract_report_stats_and_troops(image_path: str | Path | bytes | np.ndarray, *, debug_outdir: str | None = None) -> dict[str, Any]:
+    if isinstance(image_path, np.ndarray):
+        img_bgr = image_path
+    elif isinstance(image_path, bytes):
+        img_bgr = cv2.imdecode(np.frombuffer(image_path, dtype=np.uint8), cv2.IMREAD_COLOR)
+        if img_bgr is None:
+            raise FileNotFoundError("Could not decode image bytes")
+    else:
+        img_bgr = cv2.imread(str(image_path))
+        if img_bgr is None:
+            raise FileNotFoundError(f"Could not read image: {image_path}")
     source_height, source_width = img_bgr.shape[:2]
     img_bgr, content_box = _trim_uniform_border(img_bgr)
     image_height, image_width = img_bgr.shape[:2]
@@ -1795,7 +1815,10 @@ def extract_report_stats_and_troops(image_path: str | Path, *, debug_outdir: str
     _repair_troop_counts_from_slots(result, img_bgr)
     _finalize_troops_and_missing(result, img_bgr)
 
-    result["image_path"] = str(Path(image_path).resolve())
+    if isinstance(image_path, (str, Path)):
+        result["image_path"] = str(Path(image_path).resolve())
+    else:
+        result["image_path"] = "<bytes>"
     result["image_size"] = {"width": source_width, "height": source_height}
     if content_box is not None:
         result["meta"]["content_box"] = {
@@ -1923,10 +1946,7 @@ def shape_dashboard_report_result(result: dict[str, Any]) -> dict[str, Any]:
 
 
 def parse_dashboard_report_bytes(image_bytes: bytes) -> dict[str, Any]:
-    with tempfile.NamedTemporaryFile(suffix=".png") as tmp:
-        tmp.write(image_bytes)
-        tmp.flush()
-        return shape_dashboard_report_result(extract_report_stats_and_troops(tmp.name))
+    return shape_dashboard_report_result(extract_report_stats_and_troops(image_bytes))
 
 
 def _json_dumps(data: Any) -> str:
