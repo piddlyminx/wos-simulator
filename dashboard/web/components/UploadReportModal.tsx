@@ -112,6 +112,7 @@ interface Props {
   initialSelectedReportSide?: "left" | "right";
   rallyModeEditable?: boolean;
   selectionMode?: "both" | "single";
+  targetSide?: "attacker" | "defender";
   title?: string;
 }
 
@@ -158,11 +159,19 @@ export default function UploadReportModal({
   onApply,
   initialRallyMode = false,
   initialSidesSwapped = false,
-  initialSelectedReportSide = "left",
+  initialSelectedReportSide,
   rallyModeEditable = true,
   selectionMode = "both",
-  title = "Upload report",
+  targetSide,
+  title,
 }: Props) {
+  const modalTitle =
+    title ??
+    (targetSide
+      ? `Upload ${targetSide === "attacker" ? "attacker" : "defender"} report`
+      : "Upload report");
+  const defaultSide =
+    initialSelectedReportSide ?? (targetSide === "defender" ? "right" : "left");
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imageBase64, setImageBase64] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -178,7 +187,7 @@ export default function UploadReportModal({
   const [defenderModifiers, setDefenderModifiers] =
     useState<UploadActiveModifiers>(defaultActiveModifiers);
   const [selectedReportSide, setSelectedReportSide] =
-    useState<"left" | "right">(initialSelectedReportSide);
+    useState<"left" | "right">(defaultSide);
   // Reports always show "me" on the left. When the user is the defender, they
   // toggle this so the OCR left column is treated as defender, not attacker.
   // Initial value is read from the parent so the modal opens in the same order
@@ -192,13 +201,13 @@ export default function UploadReportModal({
     if (open) {
       setRallyMode(initialRallyMode);
       setSidesSwapped(initialSidesSwapped);
-      setSelectedReportSide(initialSelectedReportSide);
+      setSelectedReportSide(defaultSide);
     }
   }, [
     open,
     initialRallyMode,
     initialSidesSwapped,
-    initialSelectedReportSide,
+    defaultSide,
   ]);
 
   const reset = useCallback(() => {
@@ -358,7 +367,7 @@ export default function UploadReportModal({
         <div
           className="sim-modal-header sticky top-0 z-10 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-line)] px-3 py-3 sm:px-4"
         >
-          <h3 className="sim-modal-title">{title}</h3>
+          <h3 className="sim-modal-title">{modalTitle}</h3>
           <div className="flex items-center gap-2 flex-wrap">
             {rallyModeEditable && (
               <label
@@ -515,35 +524,76 @@ export default function UploadReportModal({
                     aria-pressed={selectedReportSide === side}
                     data-active={selectedReportSide === side}
                   >
-                    Import {side} stats
+                    Import {side === "left" ? "Left" : "Right"} side
                   </button>
                 ))}
               </div>
-              {selectedReportSide === "left" ? (
-                <HeroPickerPanel
-                  title="Left-side heroes"
-                  which="attacker"
-                  heroes={attackerHeroes}
-                  onChange={setAttackerHeroes}
-                  skill4={attackerSkill4}
-                  onSkill4Change={setAttackerSkill4}
-                  activeModifiers={attackerModifiers}
-                  onActiveModifiersChange={setAttackerModifiers}
-                  rallyMode={rallyMode}
-                />
-              ) : (
-                <HeroPickerPanel
-                  title="Right-side heroes"
-                  which="defender"
-                  heroes={defenderHeroes}
-                  onChange={setDefenderHeroes}
-                  skill4={defenderSkill4}
-                  onSkill4Change={setDefenderSkill4}
-                  activeModifiers={defenderModifiers}
-                  onActiveModifiersChange={setDefenderModifiers}
-                  rallyMode={rallyMode}
-                />
-              )}
+              <HeroPickerPanel
+                title={
+                  targetSide
+                    ? `${targetSide === "attacker" ? "Attacker" : "Defender"} heroes & modifiers`
+                    : `${selectedReportSide === "left" ? "Left" : "Right"}-side heroes`
+                }
+                which={
+                  targetSide ??
+                  (selectedReportSide === "left" ? "attacker" : "defender")
+                }
+                heroes={
+                  targetSide === "defender"
+                    ? defenderHeroes
+                    : targetSide === "attacker"
+                      ? attackerHeroes
+                      : selectedReportSide === "left"
+                        ? attackerHeroes
+                        : defenderHeroes
+                }
+                onChange={
+                  targetSide === "defender"
+                    ? setDefenderHeroes
+                    : targetSide === "attacker"
+                      ? setAttackerHeroes
+                      : selectedReportSide === "left"
+                        ? setAttackerHeroes
+                        : setDefenderHeroes
+                }
+                skill4={
+                  targetSide === "defender"
+                    ? defenderSkill4
+                    : targetSide === "attacker"
+                      ? attackerSkill4
+                      : selectedReportSide === "left"
+                        ? attackerSkill4
+                        : defenderSkill4
+                }
+                onSkill4Change={
+                  targetSide === "defender"
+                    ? setDefenderSkill4
+                    : targetSide === "attacker"
+                      ? setAttackerSkill4
+                      : selectedReportSide === "left"
+                        ? setAttackerSkill4
+                        : setDefenderSkill4
+                }
+                activeModifiers={
+                  targetSide === "defender"
+                    ? defenderModifiers
+                    : targetSide === "attacker"
+                      ? attackerModifiers
+                      : selectedReportSide === "left"
+                        ? attackerModifiers
+                        : defenderModifiers
+                }
+                onActiveModifiersChange={
+                  targetSide === "defender"
+                    ? setDefenderModifiers
+                    : targetSide === "attacker"
+                      ? setAttackerModifiers
+                      : selectedReportSide === "left"
+                        ? setAttackerModifiers
+                        : setDefenderModifiers
+                }
+                rallyMode={rallyMode}
+              />
             </div>
           ) : (
             <div className="flex flex-col md:flex-row items-stretch gap-2">
@@ -629,7 +679,13 @@ export default function UploadReportModal({
               cursor: loading || !imageBase64 ? "not-allowed" : "pointer",
             }}
           >
-            {loading ? "Parsing…" : "Parse and apply"}
+            {loading
+              ? "Parsing…"
+              : targetSide === "attacker"
+                ? "Apply to Attacker"
+                : targetSide === "defender"
+                  ? "Apply to Defender"
+                  : "Parse and apply"}
           </button>
         </div>
       </div>

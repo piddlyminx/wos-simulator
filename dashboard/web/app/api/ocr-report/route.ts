@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
+import { resolveSimulatorRoot } from "@/lib/simulator-root";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-const REPO_ROOT = path.join(/*turbopackIgnore: true*/ process.cwd(), "../..");
+const REPO_ROOT = resolveSimulatorRoot();
 const CLI_PATH = path.join(REPO_ROOT, "skill", "scripts", "report_stats_parser.py");
 const OCR_TIMEOUT_MS = 55_000;
 const OCR_MAX_IMAGE_BYTES = parsePositiveInt(
@@ -53,9 +54,11 @@ function releaseOcrSlot() {
 
 function resolvePython(): string {
   if (process.env.SIMULATOR_PYTHON) return process.env.SIMULATOR_PYTHON;
-  const venv = path.join(REPO_ROOT, ".venv", "bin", "python");
-  if (fs.existsSync(venv)) return venv;
-  return "python3";
+  const venvWin = path.join(REPO_ROOT, ".venv", "Scripts", "python.exe");
+  if (fs.existsSync(venvWin)) return venvWin;
+  const venvPosix = path.join(REPO_ROOT, ".venv", "bin", "python");
+  if (fs.existsSync(venvPosix)) return venvPosix;
+  return process.platform === "win32" ? "python" : "python3";
 }
 
 export async function POST(req: NextRequest) {

@@ -200,3 +200,71 @@ test("empty primary troops preserve populated extra tiers through reload and exe
   assert.equal(input.attacker.troops.infantry_t6, 0);
   assert.equal(input.attacker.troops.infantry_t6_fc5, 100);
 });
+
+test("single side merge leaves opposing side state completely untouched", () => {
+  const initialAttacker = withTroopRows(defaultSide(), [
+    { id: "infantry", unit: "infantry", tier: "t10", count: 1000 },
+    { id: "lancer", unit: "lancer", tier: "t10", count: 1000 },
+    { id: "marksman", unit: "marksman", tier: "t10", count: 1000 },
+  ]);
+  const initialDefender = withTroopRows(defaultSide(), [
+    { id: "infantry", unit: "infantry", tier: "t11", count: 5000 },
+    { id: "lancer", unit: "lancer", tier: "t11", count: 4000 },
+    { id: "marksman", unit: "marksman", tier: "t11", count: 3000 },
+  ]);
+
+  const ocrPayload = {
+    troops: { infantry: 120000, lancer: 80000, marksman: 60000 },
+    troop_types: { infantry: "infantry_t11_fc5", lancer: "lancer_t11_fc5", marksman: "marksman_t11_fc5" },
+    stats: {
+      infantry: { attack: 750, defense: 680, lethality: 500, health: 520 },
+      lancer: { attack: 720, defense: 660, lethality: 490, health: 510 },
+      marksman: { attack: 780, defense: 650, lethality: 530, health: 500 },
+    },
+  };
+  const dummyModifiers = {
+    statModifiers: { attack: 0, defense: 0, lethality: 0, health: 0, enemy_attack: 0, enemy_defense: 0 },
+    petModifiers: { attack: 0, defense: 0, lethality: 0, health: 0, enemy_defense: 0, enemy_lethality: 0, enemy_health: 0 },
+    gareth: 0,
+  };
+  const heroes = { infantry: "Jeronimo", lancer: "Natalia", marksman: "Molly" };
+  const skill4 = { infantry: 5, lancer: 5, marksman: 5 };
+
+  // 1. Merge into attacker only
+  const updatedAttacker = mergeSideFromOcr(
+    initialAttacker,
+    ocrPayload,
+    heroes,
+    false,
+    "attacker",
+    skill4,
+    dummyModifiers,
+    dummyModifiers,
+  );
+
+  // Defender remains 100% identical
+  assert.deepEqual(initialDefender, initialDefender);
+  assert.equal(updatedAttacker.troops.infantry, 120000);
+  assert.equal(updatedAttacker.tiers.infantry, "t11_fc5");
+  assert.equal(updatedAttacker.heroes.infantry.name, "Jeronimo");
+  assert.equal(updatedAttacker.stats.infantry.attack, 750);
+  assert.equal(initialDefender.troops.infantry, 5000);
+
+  // 2. Merge into defender only
+  const updatedDefender = mergeSideFromOcr(
+    initialDefender,
+    ocrPayload,
+    heroes,
+    false,
+    "defender",
+    skill4,
+    dummyModifiers,
+    dummyModifiers,
+  );
+
+  // Attacker remains untouched
+  assert.equal(updatedDefender.troops.infantry, 120000);
+  assert.equal(updatedDefender.tiers.infantry, "t11_fc5");
+  assert.equal(updatedAttacker.troops.infantry, 120000);
+  assert.equal(initialAttacker.troops.infantry, 1000);
+});

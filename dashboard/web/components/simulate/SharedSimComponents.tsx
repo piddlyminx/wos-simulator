@@ -94,6 +94,7 @@ interface SidePanelProps {
   syncStatsOnHeroChange: boolean;
   loadedPresetName: string | null;
   onOpenPreset: () => void;
+  onOpenUpload?: () => void;
   variant?: "dashboard" | "deploy";
 }
 
@@ -215,7 +216,7 @@ function RoleSection({
             <span className="block text-xs font-bold" style={{ color: "var(--sim-blue)" }}>
             {title}
           </span>
-          <span className="mt-0.5 block truncate text-[10px] opacity-60">
+          <span className="mt-0.5 block truncate text-[10px] opacity-60" suppressHydrationWarning>
             {summary}
           </span>
         </span>
@@ -239,7 +240,7 @@ function TroopSetupPreview({ state }: { state: SideState }) {
             {troopCategoryLabel(row.unit)}
           </span>
           <span className="font-mono tabular-nums">
-            {row.count.toLocaleString()}
+            {row.count.toLocaleString("en-US")}
           </span>
           <span className="font-mono">{row.tier}</span>
           <span className="truncate">{state.heroes[row.unit].name ?? "None"}</span>
@@ -402,6 +403,7 @@ function DashboardSidePanel({
   syncStatsOnHeroChange,
   loadedPresetName,
   onOpenPreset,
+  onOpenUpload,
 }: SidePanelProps) {
   const [activeSection, setActiveSection] =
     useState<SimRoleSectionId | null>("troops");
@@ -434,22 +436,35 @@ function DashboardSidePanel({
                   : "No role preset loaded"}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={onOpenPreset}
-              className="sim-profile-button font-bold"
-              aria-label={`${which} player profile`}
-              data-tour={which === "attacker" ? "stat-presets" : undefined}
-            >
-              Load / Save
-            </button>
+            <div className="flex items-center gap-1.5 shrink-0">
+              {onOpenUpload && (
+                <button
+                  type="button"
+                  onClick={onOpenUpload}
+                  className="sim-profile-button font-bold"
+                  aria-label={`Upload report for ${which}`}
+                  data-testid={`side-upload-button-${which}`}
+                >
+                  Upload
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onOpenPreset}
+                className="sim-profile-button font-bold"
+                aria-label={`${which} player profile`}
+                data-tour={which === "attacker" ? "stat-presets" : undefined}
+              >
+                Load / Save
+              </button>
+            </div>
           </div>
         </div>
 
         <RoleSection
           id="troops"
           title="Troops, tiers, heroes"
-          summary={`${totalTroops.toLocaleString()} troops · ${heroSummary} · ${tierSummary}`}
+          summary={`${totalTroops.toLocaleString("en-US")} troops · ${heroSummary} · ${tierSummary}`}
           preview={<TroopSetupPreview state={state} />}
           activeSection={activeSection}
           onActivate={setActiveSection}
@@ -1618,6 +1633,7 @@ function DeployArmyPanel({
   syncStatsOnHeroChange,
   loadedPresetName,
   onOpenPreset,
+  onOpenUpload,
 }: SidePanelProps) {
   const [heroPicker, setHeroPicker] = useState<TroopCategory | null>(null);
   const [setupSheet, setSetupSheet] = useState<DeploySetupSheet | null>(null);
@@ -1651,7 +1667,7 @@ function DeployArmyPanel({
       </header>
 
       <div className={deployStyles.capacityBar}>
-        <span><b aria-hidden="true">♟</b> {total.toLocaleString()} / {capacity.toLocaleString()} troops</span>
+        <span><b aria-hidden="true">♟</b> {total.toLocaleString("en-US")} / {capacity.toLocaleString("en-US")} troops</span>
         <button type="button" onClick={() => setSetupSheet("buffs")}>{activeBuffs > 0 && <strong>{activeBuffs} active</strong>}<span>Battle buffs</span><b aria-hidden="true">+</b></button>
       </div>
 
@@ -1681,15 +1697,28 @@ function DeployArmyPanel({
       >
         <header className={deployStyles.inlineStatsHeader}>
           <strong>Stat bonuses</strong>
-          <button
-            type="button"
-            className={deployStyles.profileButton}
-            onClick={onOpenPreset}
-            aria-label={`${which} player profile`}
-            data-tour={which === "attacker" ? "stat-presets" : undefined}
-          >
-            <span aria-hidden="true">♙</span><span><strong>Profile</strong><small>{loadedPresetName ?? "Not loaded"}</small></span>
-          </button>
+          <div className="flex items-center gap-1.5 shrink-0">
+            {onOpenUpload && (
+              <button
+                type="button"
+                className={deployStyles.profileButton}
+                onClick={onOpenUpload}
+                aria-label={`Upload report for ${which}`}
+                data-testid={`side-upload-button-${which}`}
+              >
+                <span aria-hidden="true">📷</span><span><strong>Upload</strong><small>Report</small></span>
+              </button>
+            )}
+            <button
+              type="button"
+              className={deployStyles.profileButton}
+              onClick={onOpenPreset}
+              aria-label={`${which} player profile`}
+              data-tour={which === "attacker" ? "stat-presets" : undefined}
+            >
+              <span aria-hidden="true">♙</span><span><strong>Profile</strong><small>{loadedPresetName ?? "Not loaded"}</small></span>
+            </button>
+          </div>
         </header>
         <DeployStatsSheet
           which={which}
